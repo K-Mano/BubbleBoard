@@ -1,0 +1,63 @@
+﻿<Window x:Class="MainWindow.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BubbleBoard_WPF"
+        mc:Ignorable="d" 
+        Height="471" 
+        Width="750"
+        BorderThickness="1" 
+        BorderBrush="#4C362E2E" 
+        Background="transparent" 
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize">
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="{x:Static SystemParameters.CaptionHeight}"
+                      GlassFrameThickness="-1"
+                      ResizeBorderThickness="{x:Static SystemParameters.WindowResizeBorderThickness}"
+                      UseAeroCaptionButtons="True" />
+    </WindowChrome.WindowChrome>
+
+    <Grid>
+        <Ellipse Fill="#66B2F8FF" HorizontalAlignment="Left" Height="350" Margin="-75,45,0,0" Stroke="#CC57D1FF" VerticalAlignment="Top" Width="350"/>
+        <Ellipse Fill="#66B2F8FF" HorizontalAlignment="Left" Height="250" Margin="135,-85,0,0" Stroke="#CC57D1FF" VerticalAlignment="Top" Width="250"/>
+        <Rectangle Fill="White" HorizontalAlignment="Left" Height="220" Margin="-1,250,-9,-32" Stroke="#4C362E2E" VerticalAlignment="Top" Width="750"/>
+        <TextBlock HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   FontFamily="Yu Gothic UI Light"
+                   FontSize="90"
+                   Foreground="Black"
+                   Text="  BubbleBoard™" Margin="10,10,10,251" Width="720" Height="177">
+            <TextBlock.Effect>
+                <DropShadowEffect ShadowDepth="0" BlurRadius="30" Color="White"/>
+            </TextBlock.Effect>
+        </TextBlock>
+        <TextBlock HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   FontFamily="Yu Gothic UI"
+                   FontSize="20"
+                   Foreground="Black"
+                   Text="Copyright © 2019 K-Mano All Rights Reserved." Margin="310,192,10,193" Width="420" Height="53">
+            <TextBlock.Effect>
+                <DropShadowEffect ShadowDepth="0" BlurRadius="30" Color="White"/>
+            </TextBlock.Effect>
+        </TextBlock>
+        <TextBlock HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   FontFamily="Yu Gothic UI"
+                   FontSize="30"
+                   Foreground="SlateGray"
+                   Text="Preference" Margin="51,260,544,135" Width="147" Height="45">
+        </TextBlock>
+        <Label Content="Title :" HorizontalAlignment="Left" Margin="51,332,0,0" VerticalAlignment="Top" Foreground="#FF6E6E6E" FontSize="18" FontFamily="yu gothic ui light"/>
+        <Label Content="Your Link :" HorizontalAlignment="Left" Margin="51,371,0,0" VerticalAlignment="Top" Foreground="#FF6E6E6E" FontSize="18" FontFamily="yu gothic ui light"/>
+        <Button x:Name="ApplyButton" HorizontalAlignment="Left" Margin="609,372,0,0" VerticalAlignment="Top" Width="100" Height="35" FontFamily="Yu Gothic UI Semilight" FontSize="14" Style="{StaticResource FlatButton}">
+            <TextBlock Text="Apply" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </Button>
+        <TextBox x:Name="LinkBox" HorizontalAlignment="Left" Height="25" Margin="157,378,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="435" BorderBrush="Transparent" Background="#66DCDCDC" SelectionBrush="#FFAFAFAF" FontFamily="Yu Gothic UI" FontSize="15"/>
+        <TextBox x:Name="TitleBox" HorizontalAlignment="Left" Height="25" Margin="157,338,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="435" BorderBrush="Transparent" Background="#66DCDCDC" SelectionBrush="#FFAFAFAF" FontFamily="Yu Gothic UI" FontSize="15"/>
+        <Rectangle x:Name="GlassBorder" HorizontalAlignment="Left" Height="252" Margin="-1,-1,-7,0" VerticalAlignment="Top" Width="750" Stroke="#4C362E2E" Fill="Transparent"/>
+        <TextBlock HorizontalAlignment="Left" Margin="599,439,0,-15" TextWrapping="Wrap" Text="BubbleBoard Beta1.0" VerticalAlignment="Top" FontFamily="Yu Gothic UI" Foreground="#FFA8A8A8"/>
+    </Grid>
+</Window>
