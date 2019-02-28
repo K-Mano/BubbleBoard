@@ -4,9 +4,7 @@
     xmlns:local="clr-namespace:BubbleBoard_WPF"
     StartupUri="MainWindow.xaml">
     <Application.Resources>
-        <!-- スタイルだけ抜粋 -->
-        <Style x:Key="FlatButton" TargetType="Button" BasedOn="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
-            <!-- デフォルトのテーマを無効化 -->
+        <Style x:Key="FlatButtonMain" TargetType="Button" BasedOn="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
             <Setter Property="OverridesDefaultStyle" Value="True" />
             <Setter Property="Template">
                 <Setter.Value>
@@ -17,7 +15,6 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
-            <!-- マウスオーバーした時に色を変える -->
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="true">
                     <Setter Property="Background" Value="#CDD2D4"/>
