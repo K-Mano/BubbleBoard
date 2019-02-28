@@ -9,7 +9,7 @@
         Width="750"
         BorderThickness="1" 
         BorderBrush="#4C362E2E" 
-        Background="#66A5D2E6" 
+        Background="transparent" 
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize">
     <WindowChrome.WindowChrome>
@@ -71,8 +71,12 @@
             <Button x:Name="ApplyButton" HorizontalAlignment="Left" Margin="609,370,0,0" VerticalAlignment="Top" Width="100" Height="35" FontFamily="Yu Gothic UI Semilight" FontSize="14" Style="{StaticResource FlatButtonMain}">
                 <TextBlock Text="作成" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             </Button>
-            <TextBox x:Name="LinkBox" HorizontalAlignment="Left" Height="25" Margin="155,378,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="435" BorderBrush="Transparent" Background="#66DCDCDC" SelectionBrush="#FFAFAFAF" FontFamily="Yu Gothic UI" FontSize="15"/>
-            <TextBox x:Name="TitleBox" HorizontalAlignment="Left" Height="25" Margin="155,338,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="435" BorderBrush="Transparent" Background="#66DCDCDC" SelectionBrush="#FFAFAFAF" FontFamily="Yu Gothic UI" FontSize="15"/>
+            <Border  HorizontalAlignment="Left" Height="25" Margin="155,378,0,0"  VerticalAlignment="Top" Width="435" CornerRadius="5" BorderBrush="#66DCDCDC" BorderThickness="1">
+                <TextBox x:Name="LinkBox" HorizontalAlignment="center" Height="25" TextWrapping="Wrap" Text="" VerticalAlignment="center" Width="435" BorderBrush="Transparent" Background="#66DCDCDC" SelectionBrush="#FFAFAFAF" FontFamily="Yu Gothic UI" FontSize="14"/>
+            </Border>
+            <Border  HorizontalAlignment="Left" Height="25" Margin="155,338,0,0" VerticalAlignment="Top" Width="435" CornerRadius="5" BorderBrush="#66DCDCDC" BorderThickness="1">
+                <TextBox x:Name="TitleBox" HorizontalAlignment="Center" Height="25" TextWrapping="Wrap" Text="" VerticalAlignment="Center" Width="435" BorderBrush="Transparent" Background="#66DCDCDC" SelectionBrush="#FFAFAFAF" FontFamily="Yu Gothic UI" FontSize="15"/>
+            </Border>
             <Rectangle x:Name="GlassBorder" HorizontalAlignment="Left" Height="252" Margin="-1,-1,-7,0" VerticalAlignment="Top" Width="750" Stroke="#4C362F24" Fill="Transparent"/>
             <TextBlock HorizontalAlignment="Left" Margin="600,440,0,-15" TextWrapping="Wrap" Text="BubbleBoard Beta1.0" VerticalAlignment="Top" FontFamily="Yu Gothic UI" Foreground="#FFA8A8A8"/>
             <Border BorderBrush="transparent" BorderThickness="0" Margin="-1,-1,-7,-30"/>
