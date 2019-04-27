@@ -1,7 +1,6 @@
 ﻿
 Imports System.IO
 Imports System.Runtime.InteropServices
-Imports System.Text
 Imports System.Windows.Interop
 Imports System.Windows.Media.Animation
 <StructLayout(LayoutKind.Sequential)>
@@ -21,6 +20,7 @@ Friend Enum AccentState
     ACCENT_ENABLE_TRANSPARENTGRADIENT = 2
     ACCENT_ENABLE_BLURBEHIND = 3
     ACCENT_INVALID_STATE = 4
+    ACCENT_ENABLE_ACRYLICBEHIND = 5
 End Enum
 
 <StructLayout(LayoutKind.Sequential)>
@@ -35,13 +35,14 @@ End Structure
 Partial Public Class MainWindow
     Inherits Window
     Public Sub New()
-            InitializeComponent()
-        End Sub
+        InitializeComponent()
+    End Sub
 
-        Public Overrides Sub OnApplyTemplate()
-            MyBase.OnApplyTemplate()
-            EnableBlur(Me)
-        End Sub
+    Public Overrides Sub OnApplyTemplate()
+        MyBase.OnApplyTemplate()
+        EnableBlur(Me)
+        'EnableAcrylic(Me)
+    End Sub
 
     <DllImport("user32.dll")>
     Friend Shared Function SetWindowCompositionAttribute(ByVal hwnd As IntPtr, ByRef data As WindowCompositionAttributeData) As Integer
@@ -54,7 +55,24 @@ Partial Public Class MainWindow
         Dim accentStructSize = Marshal.SizeOf(accent)
         accent.AccentState = AccentState.ACCENT_ENABLE_BLURBEHIND
         accent.AccentFlags = 2
-        accent.GradientColor = &H44FFFFBBUI
+        accent.GradientColor = &HCC646464UI
+        Dim accentPtr = Marshal.AllocHGlobal(accentStructSize)
+        Marshal.StructureToPtr(accent, accentPtr, False)
+        Dim data = New WindowCompositionAttributeData With {
+            .Attribute = WindowCompositionAttribute.WCA_ACCENT_POLICY,
+            .SizeOfData = accentStructSize,
+            .Data = accentPtr
+        }
+        SetWindowCompositionAttribute(windowHelper.Handle, data)
+        Marshal.FreeHGlobal(accentPtr)
+    End Sub
+    Friend Shared Sub EnableAcrylic(ByVal win As Window)
+        Dim windowHelper = New WindowInteropHelper(win)
+        Dim accent = New AccentPolicy()
+        Dim accentStructSize = Marshal.SizeOf(accent)
+        accent.AccentState = AccentState.ACCENT_ENABLE_ACRYLICBEHIND
+        accent.AccentFlags = 2
+        accent.GradientColor = &HCC646464UI
         Dim accentPtr = Marshal.AllocHGlobal(accentStructSize)
         Marshal.StructureToPtr(accent, accentPtr, False)
         Dim data = New WindowCompositionAttributeData With {
@@ -67,13 +85,15 @@ Partial Public Class MainWindow
     End Sub
     Private Sub Window_Loaded(ByVal sender As Object, ByVal e As RoutedEventArgs) Handles Me.Loaded
         NotiViewBackground.Visibility = Visibility.Hidden
-        EnableBlur(Me)
+        'EnableBlur(Me)
+        EnableAcrylic(Me)
     End Sub
 
     Private Sub ApplyButton_Clicked(sender As Object, e As RoutedEventArgs) Handles ApplyButton.Click
         If TitleBox.Text.Length > 0 And LinkBox.Text.Length > 0 Then
             If LinkBox.Text.Contains("https://") Or LinkBox.Text.Contains("http://") Then
                 Try
+                    'ex:非表示(#1)
 #Disable Warning BC42025 ' インスタンスを経由する共有メンバー、定数メンバー、列挙型メンバー、または入れ子にされた型へのアクセスです
                     If Directory.Exists(".\WorkDirs") Then
 
@@ -89,6 +109,7 @@ Partial Public Class MainWindow
                     shortcut.TargetPath = targetPath
                     shortcut.Arguments = LinkBox.Text
                     shortcut.WorkingDirectory = Path.GetDirectoryName(Reflection.Assembly.GetExecutingAssembly().Location) + "\WorkDirs\" + TitleBox.Text
+                    '*未実装*アイコンの取得(?)
                     'shortcut.IconLocation = Application.ExecutablePath + ",0"
                     shortcut.Save()
                     Marshal.FinalReleaseComObject(shortcut)
@@ -96,6 +117,8 @@ Partial Public Class MainWindow
                     TitleText.Text = "情報"
                     Description.Text = "作成に成功しました。"
                     NotiViewAnimationStartup()
+                    TitleBox.Text = ""
+                    LinkBox.Text = ""
                 Catch ex As Exception
                     TitleText.Text = "ファイル操作"
                     Description.Text = "ショートカットの作成に失敗しました。"
@@ -114,21 +137,29 @@ Partial Public Class MainWindow
         End If
     End Sub
 
+    Private Function ConvertHexToColor(hex As String) As Color
+        Dim color As Object = ColorConverter.ConvertFromString(hex)
+        Return color
+    End Function
+
     Private Sub GlassLec_LeftDown(sender As Object, e As MouseButtonEventArgs) Handles GlassBorder.MouseLeftButtonDown
         If e.ButtonState <> MouseButtonState.Pressed Then Return
         DragMove()
     End Sub
+
     Private Sub NotiViewAnimationStartup()
         NotiViewBackground.Visibility = Visibility.Visible
         NotiViewBackground.BeginAnimation(OpacityProperty, New DoubleAnimation(1, TimeSpan.FromSeconds(0.2)))
-        BlurEffect.BeginAnimation(BlurEffect.RadiusProperty, animation:=New DoubleAnimation(30, TimeSpan.FromSeconds(0.2)))
+        BlurEffect.BeginAnimation(BlurEffect.RadiusProperty, New DoubleAnimation(40, TimeSpan.FromSeconds(0.2)))
     End Sub
+
     Private Async Sub NotiViewAnimationShutDown()
         NotiViewBackground.BeginAnimation(OpacityProperty, New DoubleAnimation(0, TimeSpan.FromSeconds(0.2)))
         BlurEffect.BeginAnimation(BlurEffect.RadiusProperty, New DoubleAnimation(0, TimeSpan.FromSeconds(0.2)))
         Await Task.Delay(200)
         NotiViewBackground.Visibility = Visibility.Hidden
     End Sub
+
     Private Sub OKButton_Click(sender As Object, e As RoutedEventArgs) Handles OKButton.Click
         NotiViewAnimationShutDown()
     End Sub
@@ -138,17 +169,28 @@ Partial Public Class MainWindow
         DragMove()
     End Sub
 
-    Private Function ConvertHexToColor(hex As String) As Color
-        Dim color As Object = ColorConverter.ConvertFromString(hex)
-        Return color
-    End Function
-
     Private Sub OKButton_MouseEnter(sender As Object, e As MouseEventArgs) Handles OKButton.MouseEnter
         OKButtonText.Foreground.BeginAnimation(SolidColorBrush.ColorProperty, New ColorAnimation(ConvertHexToColor("#FF464646"), TimeSpan.FromSeconds(0.1)))
     End Sub
 
     Private Sub OKButton_MouseLeave(sender As Object, e As MouseEventArgs) Handles OKButton.MouseLeave
         OKButtonText.Foreground.BeginAnimation(SolidColorBrush.ColorProperty, New ColorAnimation(ConvertHexToColor("#FFFFFFFF"), TimeSpan.FromSeconds(0.1)))
+    End Sub
+
+    Private Sub LinkBox_MouseEnter(sender As Object, e As MouseEventArgs) Handles LinkBoxBorder.MouseEnter
+        LinkBoxBorder.BorderBrush.BeginAnimation(SolidColorBrush.ColorProperty, New ColorAnimation(ConvertHexToColor("#FFDCDCDC"), TimeSpan.FromSeconds(0.2)))
+    End Sub
+
+    Private Sub LinkBox_MouseLeave(sender As Object, e As MouseEventArgs) Handles LinkBoxBorder.MouseLeave
+        LinkBoxBorder.BorderBrush.BeginAnimation(SolidColorBrush.ColorProperty, New ColorAnimation(ConvertHexToColor("#66DCDCDC"), TimeSpan.FromSeconds(0.2)))
+    End Sub
+
+    Private Sub TitleBox_MouseEnter(sender As Object, e As MouseEventArgs) Handles TitleBoxBorder.MouseEnter
+        TitleBoxBorder.BorderBrush.BeginAnimation(SolidColorBrush.ColorProperty, New ColorAnimation(ConvertHexToColor("#FFDCDCDC"), TimeSpan.FromSeconds(0.2)))
+    End Sub
+
+    Private Sub TitleBox_MouseLeave(sender As Object, e As MouseEventArgs) Handles TitleBoxBorder.MouseLeave
+        TitleBoxBorder.BorderBrush.BeginAnimation(SolidColorBrush.ColorProperty, New ColorAnimation(ConvertHexToColor("#66DCDCDC"), TimeSpan.FromSeconds(0.2)))
     End Sub
 End Class
 
